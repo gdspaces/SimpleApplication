@@ -72,7 +72,26 @@ public class SimpleApplicationTests {
 	
 
 
+	@Test
+	public void testCreateEmployeeWithWorngEmail() throws URISyntaxException {
+		EmployeeBean req = createEmployee("Test Tester2","test.com");
+		
+        final String baseUrl = "http://localhost:"+randomServerPort+"/employee/";
+        URI uri = new URI(baseUrl);
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-COM-PERSIST", "true");      
 
+        HttpEntity<EmployeeBean> request = new HttpEntity<>(req, headers);
+        
+        ResponseEntity<String> result = this.restTemplate.postForEntity(uri, request, String.class);
+        
+        //Verify request succeed
+        Assert.assertEquals(400, result.getStatusCodeValue());
+        Assert.assertEquals("Invalid Email Address : test.com",result.getBody());
+
+	}
+	
 	
 	@Test
 	public void getEmployee() throws URISyntaxException {
